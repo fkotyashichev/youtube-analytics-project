@@ -14,9 +14,36 @@ class Channel:
         self.title = self.get_info().get('items')[0].get('snippet').get('title')
         self.description = self.get_info().get('items')[0].get('snippet').get('description')
         self.url = f"http://www.youtube.com/channel/{self.get_info().get('items')[0].get('id')}"
-        self.subscriber_count = self.get_info().get('items')[0].get('snippet').get('subscriberCount')
+        self.subscriber_count = self.get_subscriber_count()
         self.video_count = self.get_info().get('items')[0].get('statistics').get('videoCount')
         self.viewCount = self.get_info().get('items')[0].get('statistics').get('viewCount')
+
+    def get_subscriber_count(self):
+        return int(self.get_info().get('items')[0].get('statistics').get('subscriberCount'))
+
+    def __add__(self, other):
+        return self.get_subscriber_count() + other.get_subscriber_count()
+
+    def __sub__(self, other):
+        return self.get_subscriber_count() - other.get_subscriber_count()
+
+    def __str__(self):
+        return f"{self.title} ({self.url})"
+
+    def __gt__(self, other):
+        return  self.get_subscriber_count() > other.get_subscriber_count()
+
+    def __ge__(self, other):
+        return self.get_subscriber_count() >= other.get_subscriber_count()
+
+    def __eq__(self, other):
+        return self.get_subscriber_count() == other.get_subscriber_count()
+
+    def __le__(self, other):
+        return self.get_subscriber_count() <= other.get_subscriber_count()
+
+    def __lt__(self, other):
+        return self.get_subscriber_count() < other.get_subscriber_count()
 
     @property
     def channel_id(self):
