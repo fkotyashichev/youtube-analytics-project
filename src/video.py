@@ -18,3 +18,19 @@ class Video:
 
     def __repr__(self):
         return self.video_title
+
+
+class PLVideo(Video):
+    def __init__(self, video, playlist):
+        """Инициализируем дочерний класс по id видео, и id плейлиста"""
+        super().__init__(video)
+        api_key: str = os.getenv('YOUTUBE_API_KEY')
+        self.youtube = build('youtube', 'v3', developerKey=api_key)
+        self.playlist = playlist
+        self.playlist_name = self.get_playlist_name()
+
+    def get_playlist_name(self):
+        """Получаем название плейлиста"""
+        self.playlist = self.youtube.playlists().list(id=self.playlist, part='snippet').execute()
+        self.playlist_name = self.playlist['items'][0]['snippet']['title']
+        return self.playlist_name
