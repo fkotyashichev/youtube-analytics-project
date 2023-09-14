@@ -9,15 +9,23 @@ class Video:
         название, количество просмотров и лайков"""
         api_key: str = os.getenv('YOUTUBE_API_KEY')
         youtube = build('youtube', 'v3', developerKey=api_key)
-        self.video = youtube.videos().list(id=video, part='snippet,contentDetails,statistics').execute()
-        self.video_id = self.video["items"][0]["id"]
-        self.video_title = self.video["items"][0]["snippet"]["title"]
-        self.video_description = self.video["items"][0]["snippet"]["description"]
-        self.video_views = self.video["items"][0]["statistics"]["viewCount"]
-        self.video_likes = self.video["items"][0]["statistics"]["likeCount"]
+        try:
+            self.video = youtube.videos().list(id=video, part='snippet,contentDetails,statistics').execute()
+            self.video_id = self.video["items"][0]["id"]
+            self.title = self.video["items"][0]["snippet"]["title"]
+            self.video_description = self.video["items"][0]["snippet"]["description"]
+            self.video_views = self.video["items"][0]["statistics"]["viewCount"]
+            self.like_count = self.video["items"][0]["statistics"]["likeCount"]
+        except IndexError:
+            self.video = video
+            self.video_id = None
+            self.title = None
+            self.video_description = None
+            self.video_views = None
+            self.like_count = None
 
     def __repr__(self):
-        return self.video_title
+        return self.title
 
 
 class PLVideo(Video):
